@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LimitClean - Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <h2>LimitClean</h2>
+                </div>
+                <nav class="main-nav">
+                    <a href="/" class="nav-item active">Dashboard</a>
+                    <a href="/cadastro.html" class="nav-item">Cadastro</a>
+                    <a href="/usuario.html" class="nav-item">Usuário</a>
+                    <a href="/suporte.html" class="nav-item">Suporte</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <img id="userAvatar" src="/img/default-avatar.png" alt="Avatar">
+                    </div>
+                    <span id="userName">Usuário</span>
+                    <div class="dropdown">
+                        <button class="dropdown-btn">▼</button>
+                        <div class="dropdown-content">
+                            <a href="/usuario.html">Configurações</a>
+                            <a href="#" id="logoutBtn">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- KPIs Section -->
+            <section class="kpi-section">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">👥</div>
+                        <div class="kpi-data">
+                            <h3 id="totalClients">0</h3>
+                            <p>Clientes Total</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">⚠️</div>
+                        <div class="kpi-data">
+                            <h3 id="clientsRestriction">0</h3>
+                            <p>Em Restrição</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">✅</div>
+                        <div class="kpi-data">
+                            <h3 id="clientsFinalized">0</h3>
+                            <p>Finalizados</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📋</div>
+                        <div class="kpi-data">
+                            <h3 id="activeContracts">0</h3>
+                            <p>Contratos Ativos</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🎫</div>
+                        <div class="kpi-data">
+                            <h3 id="openTickets">0</h3>
+                            <p>Tickets Abertos</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Clientes por Status (6 meses)</h3>
+                        <canvas id="clientsStatusChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Contratos por Mês</h3>
+                        <canvas id="contractsChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Tickets por Status</h3>
+                        <canvas id="ticketsChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="recent-section">
+                <div class="section-header">
+                    <h3>Atividade Recente</h3>
+                    <div class="filters">
+                        <input type="search" id="searchFilter" placeholder="Buscar...">
+                        <select id="statusFilter">
+                            <option value="">Todos os Status</option>
+                            <option value="RESTRICAO">Restrição</option>
+                            <option value="FINALIZADO">Finalizado</option>
+                            <option value="REPROTOCOLO">Reprotocolo</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>CPF/CNPJ</th>
+                                <th>Status</th>
+                                <th>Representante</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentClientsTable">
+                            <tr>
+                                <td colspan="6" class="loading">Carregando dados...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be generated by JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Client Detail Modal -->
+    <div id="clientDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="clientName">Cliente</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="dados">Dados</button>
+                    <button class="tab-btn" data-tab="documentos">Documentos</button>
+                    <button class="tab-btn" data-tab="fotos">Fotos</button>
+                    <button class="tab-btn" data-tab="contratos">Contratos</button>
+                    <button class="tab-btn" data-tab="tickets">Tickets</button>
+                    <button class="tab-btn" data-tab="historico">Histórico</button>
+                </div>
+                
+                <div id="clientDetailContent" class="tab-content">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/charts.js"></script>
+</body>
+</html>
