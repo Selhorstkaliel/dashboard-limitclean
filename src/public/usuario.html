@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LimitClean - Configurações da Conta</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <h2>LimitClean</h2>
+                </div>
+                <nav class="main-nav">
+                    <a href="/" class="nav-item">Dashboard</a>
+                    <a href="/cadastro.html" class="nav-item">Cadastro</a>
+                    <a href="/usuario.html" class="nav-item active">Usuário</a>
+                    <a href="/suporte.html" class="nav-item">Suporte</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <img id="userAvatar" src="/img/default-avatar.png" alt="Avatar">
+                    </div>
+                    <span id="userName">Usuário</span>
+                    <div class="dropdown">
+                        <button class="dropdown-btn">▼</button>
+                        <div class="dropdown-content">
+                            <a href="/usuario.html">Configurações</a>
+                            <a href="#" id="logoutBtn">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="account-section">
+                <div class="section-header">
+                    <h1>Configurações da Conta</h1>
+                    <p>Gerencie suas informações pessoais, segurança e preferências</p>
+                </div>
+
+                <!-- Account Tabs -->
+                <div class="account-tabs-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="perfil">
+                            👤 Perfil
+                        </button>
+                        <button class="tab-btn" data-tab="seguranca">
+                            🔒 Segurança
+                        </button>
+                        <button class="tab-btn" data-tab="2fa">
+                            🛡️ 2FA
+                        </button>
+                        <button class="tab-btn" data-tab="preferencias">
+                            ⚙️ Preferências
+                        </button>
+                        <button class="tab-btn" data-tab="notificacoes">
+                            🔔 Notificações
+                        </button>
+                        <button class="tab-btn" data-tab="tokens">
+                            🔑 Tokens API
+                        </button>
+                    </div>
+
+                    <div class="tab-content-container">
+                        <!-- Perfil Tab -->
+                        <div id="perfil-tab" class="tab-content active">
+                            <div class="account-card">
+                                <h3>Informações Pessoais</h3>
+                                <form id="profileForm" class="account-form">
+                                    <div class="form-grid">
+                                        <div class="input-group">
+                                            <label for="nome">Nome Completo</label>
+                                            <input type="text" id="nome" name="nome" required>
+                                        </div>
+                                        
+                                        <div class="input-group">
+                                            <label for="email">E-mail</label>
+                                            <input type="email" id="email" name="email" required>
+                                        </div>
+                                        
+                                        <div class="input-group">
+                                            <label for="cpfCnpj">CPF/CNPJ</label>
+                                            <input type="text" id="cpfCnpj" name="cpfCnpj" readonly>
+                                        </div>
+                                        
+                                        <div class="input-group">
+                                            <label for="papel">Papel</label>
+                                            <input type="text" id="papel" name="papel" readonly>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <label for="avatar">Avatar</label>
+                                        <div class="avatar-upload">
+                                            <img id="avatarPreview" src="/img/default-avatar.png" alt="Avatar atual">
+                                            <input type="file" id="avatarFile" accept="image/*" style="display: none;">
+                                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('avatarFile').click()">
+                                                Alterar Avatar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="btn-text">Salvar Alterações</span>
+                                            <div class="spinner" style="display: none;"></div>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Segurança Tab -->
+                        <div id="seguranca-tab" class="tab-content">
+                            <div class="account-card">
+                                <h3>Alterar Senha</h3>
+                                <form id="passwordForm" class="account-form">
+                                    <div class="input-group">
+                                        <label for="currentPassword">Senha Atual</label>
+                                        <input type="password" id="currentPassword" name="currentPassword" required minlength="8">
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <label for="newPassword">Nova Senha</label>
+                                        <input type="password" id="newPassword" name="newPassword" required minlength="8">
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <label for="confirmPassword">Confirmar Nova Senha</label>
+                                        <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8">
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">
+                                            <span class="btn-text">Alterar Senha</span>
+                                            <div class="spinner" style="display: none;"></div>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="account-card">
+                                <h3>Sessões Ativas</h3>
+                                <p class="text-muted mb-2">Gerencie suas sessões ativas em diferentes dispositivos</p>
+                                <div id="activeSessions" class="sessions-list">
+                                    <div class="loading">Carregando sessões...</div>
+                                </div>
+                                <div class="form-actions">
+                                    <button id="revokeAllBtn" class="btn btn-danger">
+                                        Revogar Todas as Sessões
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="account-card">
+                                <h3>Histórico de Login</h3>
+                                <div id="loginHistory" class="history-list">
+                                    <div class="text-center text-muted">Funcionalidade em desenvolvimento</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2FA Tab -->
+                        <div id="2fa-tab" class="tab-content">
+                            <div class="account-card">
+                                <h3>Autenticação de Dois Fatores (2FA)</h3>
+                                <p class="text-muted mb-3">Adicione uma camada extra de segurança à sua conta</p>
+                                
+                                <div id="2faStatus" class="status-indicator">
+                                    <div class="status-off">
+                                        <span class="status-icon">⚠️</span>
+                                        <span>2FA Desativado</span>
+                                    </div>
+                                </div>
+                                
+                                <div id="2faSetup" class="twofa-setup">
+                                    <button id="enable2faBtn" class="btn btn-primary mb-3">
+                                        Ativar 2FA
+                                    </button>
+                                    
+                                    <div id="qrCodeSection" style="display: none;">
+                                        <h4>1. Escaneie o QR Code</h4>
+                                        <p class="text-muted mb-2">Use um app como Google Authenticator ou Authy</p>
+                                        <div id="qrCodeContainer" class="text-center mb-3">
+                                            <!-- QR Code will be generated here -->
+                                        </div>
+                                        
+                                        <h4>2. Digite o código de verificação</h4>
+                                        <div class="input-group mb-3">
+                                            <input type="text" id="totpCode" placeholder="000000" maxlength="6" class="text-center">
+                                        </div>
+                                        
+                                        <div class="form-actions">
+                                            <button id="verify2faBtn" class="btn btn-success">
+                                                Verificar e Ativar
+                                            </button>
+                                            <button id="cancel2faBtn" class="btn btn-secondary">
+                                                Cancelar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="backupCodes" class="backup-codes" style="display: none;">
+                                    <h4>Códigos de Backup</h4>
+                                    <p class="text-muted mb-2">Guarde estes códigos em local seguro. Cada código pode ser usado apenas uma vez.</p>
+                                    <div id="backupCodesList" class="backup-list">
+                                        <!-- Backup codes will be listed here -->
+                                    </div>
+                                </div>
+
+                                <div id="2faDisable" style="display: none;">
+                                    <button id="disable2faBtn" class="btn btn-danger">
+                                        Desativar 2FA
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preferências Tab -->
+                        <div id="preferencias-tab" class="tab-content">
+                            <div class="account-card">
+                                <h3>Aparência</h3>
+                                <form id="preferencesForm" class="account-form">
+                                    <div class="input-group">
+                                        <label for="theme">Tema</label>
+                                        <select id="theme" name="theme">
+                                            <option value="dark">Escuro (Padrão)</option>
+                                            <option value="light">Claro</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <label for="density">Densidade da Interface</label>
+                                        <select id="density" name="density">
+                                            <option value="comfortable">Confortável</option>
+                                            <option value="compact">Compacta</option>
+                                            <option value="spacious">Espaçosa</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="account-card">
+                                <h3>Localização</h3>
+                                <form class="account-form">
+                                    <div class="input-group">
+                                        <label for="timezone">Fuso Horário</label>
+                                        <select id="timezone" name="timezone">
+                                            <option value="America/Sao_Paulo">São Paulo (UTC-3)</option>
+                                            <option value="America/Rio_Branco">Rio Branco (UTC-5)</option>
+                                            <option value="America/Manaus">Manaus (UTC-4)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <label for="dateFormat">Formato de Data</label>
+                                        <select id="dateFormat" name="dateFormat">
+                                            <option value="dd/mm/yyyy">DD/MM/AAAA</option>
+                                            <option value="mm/dd/yyyy">MM/DD/AAAA</option>
+                                            <option value="yyyy-mm-dd">AAAA-MM-DD</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="input-group">
+                                        <label for="language">Idioma</label>
+                                        <select id="language" name="language">
+                                            <option value="pt-BR">Português (Brasil)</option>
+                                            <option value="en-US">English (US)</option>
+                                            <option value="es-ES">Español</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="form-actions">
+                                <button class="btn btn-primary">
+                                    Salvar Preferências
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Notificações Tab -->
+                        <div id="notificacoes-tab" class="tab-content">
+                            <div class="account-card">
+                                <h3>Notificações por E-mail</h3>
+                                <form id="notificationsForm" class="account-form">
+                                    <div class="checkbox-list">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="notifyLogin" name="notifyLogin" checked>
+                                            <span class="checkmark"></span>
+                                            <div class="checkbox-content">
+                                                <strong>Novos Logins</strong>
+                                                <p>Receber notificação quando houver login de novo dispositivo</p>
+                                            </div>
+                                        </label>
+                                        
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="notifyFailure" name="notifyFailure" checked>
+                                            <span class="checkmark"></span>
+                                            <div class="checkbox-content">
+                                                <strong>Tentativas de Login Falharam</strong>
+                                                <p>Receber notificação sobre tentativas de login fracassadas</p>
+                                            </div>
+                                        </label>
+                                        
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="notifyPasswordChange" name="notifyPasswordChange" checked>
+                                            <span class="checkmark"></span>
+                                            <div class="checkbox-content">
+                                                <strong>Troca de Senha</strong>
+                                                <p>Receber notificação quando a senha for alterada</p>
+                                            </div>
+                                        </label>
+                                        
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="notifyProfileChange" name="notifyProfileChange">
+                                            <span class="checkmark"></span>
+                                            <div class="checkbox-content">
+                                                <strong>Alterações no Perfil</strong>
+                                                <p>Receber notificação quando informações do perfil forem alteradas</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="account-card">
+                                <h3>Notificações Push</h3>
+                                <p class="text-muted mb-3">Funcionalidade em desenvolvimento</p>
+                                <div class="form-actions">
+                                    <button class="btn btn-secondary" disabled>
+                                        Configurar Push Notifications
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button class="btn btn-primary">
+                                    Salvar Configurações
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tokens API Tab -->
+                        <div id="tokens-tab" class="tab-content">
+                            <div class="account-card">
+                                <h3>Tokens de Acesso API</h3>
+                                <p class="text-muted mb-3">Crie tokens para acessar a API programaticamente</p>
+                                
+                                <div class="form-actions mb-3">
+                                    <button id="createTokenBtn" class="btn btn-primary">
+                                        + Criar Novo Token
+                                    </button>
+                                </div>
+
+                                <div id="tokensList" class="tokens-list">
+                                    <div class="loading">Carregando tokens...</div>
+                                </div>
+                            </div>
+
+                            <!-- Create Token Modal -->
+                            <div id="createTokenModal" class="modal">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3>Criar Novo Token</h3>
+                                        <button class="modal-close">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="createTokenForm">
+                                            <div class="input-group">
+                                                <label for="tokenName">Nome do Token</label>
+                                                <input type="text" id="tokenName" name="tokenName" required placeholder="Ex: Mobile App Token">
+                                            </div>
+                                            
+                                            <div class="input-group">
+                                                <label for="tokenScope">Permissões</label>
+                                                <select id="tokenScope" name="tokenScope" required>
+                                                    <option value="">Selecione...</option>
+                                                    <option value="read">Somente Leitura</option>
+                                                    <option value="write">Leitura e Escrita</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-actions">
+                                                <button type="submit" class="btn btn-primary">
+                                                    Gerar Token
+                                                </button>
+                                                <button type="button" class="btn btn-secondary" onclick="closeCreateTokenModal()">
+                                                    Cancelar
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Alert container -->
+    <div class="alert" id="alertMessage" style="display: none;"></div>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/usuario.js"></script>
+</body>
+</html>

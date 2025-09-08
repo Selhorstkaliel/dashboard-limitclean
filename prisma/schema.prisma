@@ -1,0 +1,209 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User roles enum
+enum UserRole {
+  ADMIN
+  REPRESENTANTE
+  VENDEDOR
+  USER
+}
+
+// Client status enum
+enum ClientStatus {
+  RASCUNHO
+  RESTRICAO
+  FINALIZADO
+  REPROTOCOLO
+}
+
+// Contract status enum
+enum ContractStatus {
+  ATIVO
+  SUSPENSO
+  CANCELADO
+  CONCLUIDO
+}
+
+// Ticket status enum
+enum TicketStatus {
+  ABERTO
+  EM_ANDAMENTO
+  RESOLVIDO
+  FECHADO
+}
+
+// Token scope enum
+enum TokenScope {
+  READ
+  WRITE
+}
+
+// Users table
+model User {
+  id               String   @id @default(cuid())
+  nome             String
+  cpfCnpj          String?  @unique @map("cpf_cnpj")
+  email            String   @unique
+  senhaHash        String   @map("senha_hash")
+  papel            UserRole @default(USER)
+  totpSecret       String?  @map("totp_secret")
+  twofaEnabled     Boolean  @default(false) @map("twofa_enabled")
+  avatarPath       String?  @map("avatar_path")
+  preferenciasJson Json?    @map("preferencias_json")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  sessions           UserSession[]
+  tokens             UserToken[]
+  representedContracts Contract[] @relation("RepresentanteContract")
+  soldContracts      Contract[] @relation("VendedorContract")
+  authoredTickets    Ticket[]   @relation("AuthorTicket")
+  auditLogs          AuditLog[]
+
+  @@map("users")
+}
+
+// User sessions table
+model UserSession {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  userAgent String?   @map("user_agent")
+  ip        String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  revokedAt DateTime? @map("revoked_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+// User tokens table (for API tokens)
+model UserToken {
+  id        String     @id @default(cuid())
+  userId    String     @map("user_id")
+  tokenHash String     @map("token_hash")
+  scope     TokenScope @default(READ)
+  createdAt DateTime   @default(now()) @map("created_at")
+  revokedAt DateTime?  @map("revoked_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_tokens")
+}
+
+// Clients table
+model Client {
+  id              String       @id @default(cuid())
+  nome            String
+  cpfCnpj         String       @unique @map("cpf_cnpj")
+  email           String?
+  telefonesJson   Json?        @map("telefones_json")
+  fotosJson       Json?        @map("fotos_json")
+  documentosJson  Json?        @map("documentos_json")
+  status          ClientStatus @default(RESTRICAO)
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  contracts Contract[]
+  tickets   Ticket[]   @relation("ClientTicket")
+
+  @@map("clients")
+}
+
+// Contracts table
+model Contract {
+  id              String         @id @default(cuid())
+  clientId        String         @map("client_id")
+  representanteId String?        @map("representante_id")
+  vendedorId      String?        @map("vendedor_id")
+  valor           Decimal
+  status          ContractStatus @default(ATIVO)
+  assinaturaNome  String?        @map("assinatura_nome")
+  assinaturaData  DateTime?      @map("assinatura_data")
+  assinaturaIp    String?        @map("assinatura_ip")
+  pdfPath         String?        @map("pdf_path")
+  createdAt       DateTime       @default(now()) @map("created_at")
+
+  // Relations
+  client        Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  representante User?  @relation("RepresentanteContract", fields: [representanteId], references: [id], onDelete: Restrict)
+  vendedor      User?  @relation("VendedorContract", fields: [vendedorId], references: [id], onDelete: Restrict)
+
+  @@map("contracts")
+}
+
+// Tickets table
+model Ticket {
+  id         String       @id @default(cuid())
+  autorUserId String?     @map("autor_user_id")
+  clientId   String?      @map("client_id")
+  assunto    String
+  mensagem   String
+  status     TicketStatus @default(ABERTO)
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  autor  User?   @relation("AuthorTicket", fields: [autorUserId], references: [id], onDelete: Restrict)
+  client Client? @relation("ClientTicket", fields: [clientId], references: [id], onDelete: Restrict)
+
+  @@map("tickets")
+}
+
+// Audit logs table
+model AuditLog {
+  id       String   @id @default(cuid())
+  actorId  String?  @map("actor_id")
+  action   String
+  entity   String
+  entityId String   @map("entity_id")
+  diffJson Json?    @map("diff_json")
+  ip       String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+// Indexes
+model Client {
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model User {
+  @@index([email])
+  @@index([papel])
+  @@index([createdAt])
+}
+
+model Contract {
+  @@index([clientId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Ticket {
+  @@index([status])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  @@index([actorId])
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
