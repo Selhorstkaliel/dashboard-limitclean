@@ -18,7 +18,7 @@ import { ClientsModule } from './modules/clients/clients.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { TicketsModule } from './modules/tickets/tickets.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
-import { FilesModule } from './modules/files/files.module';
+// import { FilesModule } from './modules/files/files.module';
 
 // Configuration
 import { appConfig } from './config/app.config';
@@ -54,7 +54,7 @@ import { ratelimitConfig } from './config/rate-limit.config';
     ContractsModule,
     TicketsModule,
     DashboardModule,
-    FilesModule,
+    // FilesModule,
   ],
 })
 export class AppModule {}
