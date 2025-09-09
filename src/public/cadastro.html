@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LimitClean - Cadastro</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <h2>LimitClean</h2>
+                </div>
+                <nav class="main-nav">
+                    <a href="/" class="nav-item">Dashboard</a>
+                    <a href="/cadastro.html" class="nav-item active">Cadastro</a>
+                    <a href="/usuario.html" class="nav-item">Usuário</a>
+                    <a href="/suporte.html" class="nav-item">Suporte</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <img id="userAvatar" src="/img/default-avatar.png" alt="Avatar">
+                    </div>
+                    <span id="userName">Usuário</span>
+                    <div class="dropdown">
+                        <button class="dropdown-btn">▼</button>
+                        <div class="dropdown-content">
+                            <a href="/usuario.html">Configurações</a>
+                            <a href="#" id="logoutBtn">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="recent-section">
+                <div class="section-header">
+                    <h3>Gestão de Cadastros</h3>
+                    <div class="filters">
+                        <input type="search" id="searchFilter" placeholder="Buscar...">
+                        <select id="typeFilter">
+                            <option value="">Todos os Tipos</option>
+                            <option value="usuarios">Usuários</option>
+                            <option value="clientes">Clientes</option>
+                        </select>
+                        <button class="btn btn-primary" id="addBtn">
+                            + Novo Cadastro
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="usuarios">👥 Usuários</button>
+                    <button class="tab-btn" data-tab="clientes">🏢 Clientes</button>
+                </div>
+                
+                <div class="tab-content-container">
+                    <div id="usuarios-tab" class="tab-content active">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>E-mail</th>
+                                        <th>Papel</th>
+                                        <th>Status 2FA</th>
+                                        <th>Data de Criação</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuariosTable">
+                                    <tr>
+                                        <td colspan="6" class="loading">Carregando dados...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div id="clientes-tab" class="tab-content">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>CPF/CNPJ</th>
+                                        <th>E-mail</th>
+                                        <th>Status</th>
+                                        <th>Data de Criação</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientesTable">
+                                    <tr>
+                                        <td colspan="6" class="loading">Carregando dados...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be generated by JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Alert container -->
+    <div class="alert" id="alertMessage" style="display: none;"></div>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/cadastro.js"></script>
+</body>
+</html>
